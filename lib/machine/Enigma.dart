@@ -9,6 +9,7 @@ class Enigma {
   final RotorSet rotorSet;
   final List<String> charset;
   static const String LatinAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  int get numRotors => rotorSet.rotors.length;
 
   Enigma(Iterable<String> chars, this.plugBoard, this.rotorSet) :
     charset = chars.toList();
@@ -19,7 +20,7 @@ class Enigma {
       PlugBoard(),
       RotorSet(
         charset.length,
-        [Rotor.rotorI(), Rotor.rotorII(), Rotor.rotorIII()],
+        [Rotor.rotorI(12), Rotor.rotorII(5), Rotor.rotorIII(20)],
         Reflector.reflectorB()
       )
     );
@@ -34,9 +35,14 @@ class Enigma {
   void addRotor(Rotor rotor, [int idx]) => rotorSet.add(rotor, idx);
   void addRotors(Iterable<Rotor> rotors) => rotorSet.addAll(rotors);
 
-  void configure() {}
+  void configure() {
+    // todo
+  }
 
-  String traverse(String input) {
+  /// This is the function that does all of the encoding and decoding
+  /// I'm using "codec" as a verb because there's no verb that encompasses
+  /// both encoding and decoding (to my knowledge, at least)
+  String codec(String input) {
     var output = charset.indexOf(input);
     output = plugBoard.traverse(output);
     output = rotorSet.traverse(output);
@@ -57,7 +63,7 @@ main() {
   var input = 'A';
   for (var i = 0; i < 1000; i++) {
     print(input);
-    input = enigma.traverse(input);
+    input = enigma.codec(input);
   }
 
   print(enigma.toJson());

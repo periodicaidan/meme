@@ -19,7 +19,7 @@ class MEME extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Enigma Emu',
+      title: "MEME",
       theme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.blue,
@@ -35,13 +35,12 @@ class MEME extends StatelessWidget {
 
 class HomePage extends StatefulWidget {
   final KeyboardFormat _keyboardFormat = KeyboardFormat.enigma();
+  final String title;
   Enigma enigma;
 
   HomePage({Key key, this.title}) : super(key: key) {
     enigma = Enigma.defaultConfig(_keyboardFormat.charset);
   }
-
-  final String title;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -52,7 +51,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var rotors = <EnigmaRotor>[];
-    for (var i = 0; i < widget.enigma.rotorSet.rotors.length; i++) {
+    for (var i = 0; i < widget.enigma.numRotors; i++) {
       rotors.insert(0, EnigmaRotor(i));
     }
 
@@ -61,18 +60,9 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            }
-          ),
+          leading: OpenDrawerButton(),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: () {},
-              tooltip: "Reset",
-            )
+            RotorResetButton(widget.enigma, rotors),
           ],
         ),
         body: Column(
@@ -129,3 +119,37 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+/// TODO: This *does* reset all the rotors, but does not redraw them
+class RotorResetButton extends StatelessWidget {
+  final Enigma enigma;
+  final List<EnigmaRotor> rotors;
+
+  RotorResetButton(this.enigma, this.rotors);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.refresh),
+      onPressed: () {
+        for (var rotor in rotors) {
+          Provider.of<EnigmaButtonScheduler>(context).enigma.rotorSet.rotors[rotor.index].reset();
+        }
+      },
+      tooltip: "Reset",
+    );
+  }
+}
+
+class OpenDrawerButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.menu),
+      onPressed: () {
+        Scaffold.of(context).openDrawer();
+      }
+    );
+  }
+}
+

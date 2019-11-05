@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
 import "package:enigma/utils/EnigmaButtonScheduler.dart";
+//import "package:enigma/utils/RotorResetScheduler.dart";
 
 class RotorPainter extends CustomPainter {
   @override
@@ -16,14 +17,20 @@ class RotorPainter extends CustomPainter {
     var center = Offset(size.width / 2, size.height / 2);
     var radius = min(size.width / 2, size.height / 2);
 
-    canvas.drawRect(Rect.fromCircle(center: center, radius: radius), window);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromCircle(
+          center: center,
+          radius: radius
+        ),
+        Radius.circular(12.0)
+      ),
+      window
+    );
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
-
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
 class EnigmaRotor extends StatelessWidget {
@@ -35,7 +42,9 @@ class EnigmaRotor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<EnigmaButtonScheduler>(context);
-    var faceText = _provider.enigma.charset[_provider.enigma.rotorSet.rotors[index].position];
+    var startIndex = _provider.enigma.rotorSet.rotors[index].position;
+    var faceText = _provider.enigma.charset[startIndex];
+
     return Container(
       width: size,
       height: size,

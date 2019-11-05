@@ -13,7 +13,7 @@ class EnigmaButtonScheduler with ChangeNotifier {
   void activate(String char) {
     active = true;
     inputChar = char;
-    outputChar = enigma.traverse(char);
+    outputChar = enigma.codec(char);
 
     notifyListeners();
   }
@@ -25,5 +25,4 @@ class EnigmaButtonScheduler with ChangeNotifier {
 
     notifyListeners();
   }
-
 }

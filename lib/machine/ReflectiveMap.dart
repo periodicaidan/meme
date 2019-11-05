@@ -1,8 +1,7 @@
 class ReflectiveMap<T> {
-  final Map<T, T> map;
+  final Map<T, T> map = Map();
 
-  ReflectiveMap() :
-    map = Map();
+  ReflectiveMap();
 
   factory ReflectiveMap.fromMap(Map<T, T> map) {
     var rm = ReflectiveMap();

@@ -1,3 +1,10 @@
+/// MEME/lib/widgets/EnigmaBulb.dart
+///
+/// Table of Contents
+/// [CircleBulb] : A circular widget that serves as a bulb
+/// [EnigmaBulb] : A light bulb on the enigma machine
+/// [_EnigmaBulbState] : Holds the state of the above
+
 import "dart:math";
 
 import "package:flutter/material.dart";
@@ -40,10 +47,7 @@ class CircleBulb extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CircleBulb old) {
-    return active != old.active;
-  }
-
+  bool shouldRepaint(CircleBulb old) => active != old.active;
 }
 
 class EnigmaBulb extends StatefulWidget {
@@ -75,7 +79,8 @@ class _EnigmaBulbState extends State<EnigmaBulb> {
       padding: EdgeInsets.all(4.0),
       child: CustomPaint(
         painter: CircleBulb(
-          fillColor: Colors.black87,
+          fillColor: _provider.active && widget.char == _provider.outputChar
+            ? Colors.yellow : Colors.black87,
           borderColor: Colors.white70,
           textColor: Colors.white70,
         ),
@@ -84,7 +89,7 @@ class _EnigmaBulbState extends State<EnigmaBulb> {
             widget.char,
             style: TextStyle(
               color: (_provider.active && widget.char == _provider.outputChar)
-                ? Colors.yellow : Colors.white70,
+                ? Colors.black : Colors.white70,
               fontWeight: FontWeight.bold,
               fontSize: 14.0
             )

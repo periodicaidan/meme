@@ -8,13 +8,8 @@ class RotorSet {
 
   RotorSet(int numChars, this.rotors, this.reflector);
 
-  void add(Rotor rotor, [int idx]) {
-    if (idx == null) {
-      rotors.add(rotor);
-    } else {
-      rotors.insert(idx, rotor);
-    }
-  }
+  void add(Rotor rotor, [int idx]) =>
+    idx == null ? rotors.add(rotor) : rotors.insert(idx, rotor);
 
   void addAll(Iterable<Rotor> rotors) {
     for (var rotor in rotors) {

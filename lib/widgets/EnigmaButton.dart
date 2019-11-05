@@ -1,3 +1,12 @@
+/// MEME/lib/widgets/EnigmaButton.dart
+///
+/// Table of Contents
+/// [EnigmaButtonState] : An enumeration of the possible states of a button
+/// [EnigmaButton] : A button on the enigma machine
+/// [_EnigmaButtonState] : The state of the above
+/// [CircleButtonRaised] : The appearance of a raised button
+/// [CircleButtonPressed] : The appearance of a pressed button
+
 import "dart:math";
 
 import "package:flutter/material.dart";
@@ -26,11 +35,6 @@ class _EnigmaButtonState extends State<EnigmaButton> {
   EnigmaButtonState _buttonState = EnigmaButtonState.Raised;
 
   @override
-  void setState(fn) {
-    super.setState(fn);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<EnigmaButtonScheduler>(context);
     return Container(
@@ -55,11 +59,14 @@ class _EnigmaButtonState extends State<EnigmaButton> {
                 p = CircleButtonRaised();
                 dy = -0.5;
               break;
+
               case EnigmaButtonState.Pressed:
                 p = CircleButtonPressed();
                 dy = 0.2;
               break;
+
               case EnigmaButtonState.Disabled:
+              default:
                 p = CircleButtonPressed();
                 dy = 0.2;
               break;
@@ -115,7 +122,14 @@ class CircleButtonRaised extends CustomPainter {
         ..strokeCap = StrokeCap.round
     );
     // The side of the button
-    canvas.drawCircle(Offset(circleCenter.dx, circleCenter.dy + 5.0), radius + 1.0, side);
+    canvas.drawCircle(
+      Offset(
+        circleCenter.dx,
+        circleCenter.dy + 5.0
+      ),
+      radius + 1.0,
+      side
+    );
     // The button's face
     canvas.drawCircle(circleCenter, radius, face);
     // The edge of the button's face
@@ -150,17 +164,22 @@ class CircleButtonPressed extends CustomPainter {
     var circleCenter = Offset(middle.dx, size.height - radius - sideWidth);
 
     // The side of the button
-    canvas.drawCircle(Offset(circleCenter.dx, circleCenter.dy + sideWidth), radius + 1.0, side);
+    canvas.drawCircle(
+      Offset(
+        circleCenter.dx,
+        circleCenter.dy + sideWidth
+      ),
+      radius + 1.0, side
+    );
+
     // The face of the button
     canvas.drawCircle(circleCenter, radius, face);
+
     // Edge of the face
     canvas.drawCircle(circleCenter, radius, faceEdge);
 
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
-
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

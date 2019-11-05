@@ -1,11 +1,10 @@
 class PlugBoard {
-  final Map<int, int> connections;
+  final Map<int, int> connections = Map();
   int get totalConnections => connections.length;
 
-  PlugBoard() :
-    connections = Map();
+  PlugBoard();
 
-  PlugBoard.fromPairs(String spaceSeparatedPairs) : connections = Map() {
+  PlugBoard.fromPairs(String spaceSeparatedPairs) {
     var A = "A".runes.first;
     connections.addEntries(spaceSeparatedPairs.split(" ").map((s) {
       var chars = s.runes.toList();
@@ -65,5 +64,4 @@ class PlugBoard {
 
     return strbuf.toString().trim();
   }
-
 }

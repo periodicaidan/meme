@@ -9,7 +9,8 @@ enum RotorDirection {
 /// inside, that spun with every keypress on the Enigma machine
 class Rotor {
   final List<int> mapping;
-  int position = 0;
+  int startPosition;
+  int position;
   int turnover;
   Map<String, dynamic> get json => {
     "position": position,
@@ -31,8 +32,11 @@ class Rotor {
     return cfg.toString();
   }
 
-  Rotor(int numChars) :
-    mapping = List.generate(numChars, (i) => i);
+  Rotor(int numChars, [int startPosition = 0]) :
+    mapping = List.generate(numChars, (i) => i) {
+    this.startPosition = startPosition;
+    position = this.startPosition;
+  }
 
   factory Rotor.random(int numChars) {
     var rng = Random();
@@ -42,24 +46,29 @@ class Rotor {
     return r;
   }
 
-  factory Rotor.fromIter(Iterable<int> iter) {
-    var r = Rotor(iter.length);
+  factory Rotor.fromIter(Iterable<int> iter, [int startPosition = 0]) {
+    var r = Rotor(iter.length, startPosition);
     r.mapping.setRange(0, r.mapping.length, iter);
     return r;
   }
 
-  factory Rotor.latin(String charset, String turnover) {
+  factory Rotor.latin(String charset, String turnover, [int startPosition = 0]) {
     var A = "A".runes.first;
-    var r = Rotor.fromIter(charset.runes.map((rune) => rune - A));
+    var r = Rotor.fromIter(charset.runes.map((rune) => rune - A), startPosition);
     r.turnover = turnover.runes.first - A;
     return r;
   }
 
-  factory Rotor.rotorI() => Rotor.latin("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "R");
-  factory Rotor.rotorII() => Rotor.latin("AJDKSIRUXBLHWTMCQGZNPYFVOE", "F");
-  factory Rotor.rotorIII() => Rotor.latin("BDFHJLCPRTXVZNYEIWGAKMUSQO", "W");
-  factory Rotor.rotorIV() => Rotor.latin("ESOVPZJAYQUIRHXLNFTGKDCMWB", "K");
-  factory Rotor.rotorV() => Rotor.latin("VZBRGITYUPSDNHLXAWMJQOFECK", "A");
+  factory Rotor.rotorI([int startPosition = 0]) =>
+    Rotor.latin("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "R", startPosition);
+  factory Rotor.rotorII([int startPosition = 0]) =>
+    Rotor.latin("AJDKSIRUXBLHWTMCQGZNPYFVOE", "F", startPosition);
+  factory Rotor.rotorIII([int startPosition = 0]) =>
+    Rotor.latin("BDFHJLCPRTXVZNYEIWGAKMUSQO", "W", startPosition);
+  factory Rotor.rotorIV([int startPosition = 0]) =>
+    Rotor.latin("ESOVPZJAYQUIRHXLNFTGKDCMWB", "K", startPosition);
+  factory Rotor.rotorV([int startPosition = 0]) =>
+    Rotor.latin("VZBRGITYUPSDNHLXAWMJQOFECK", "A", startPosition);
 
   void step() {
     mapping.insert(0, mapping.removeLast());
@@ -77,20 +86,16 @@ class Rotor {
     int output;
     switch (direction) {
       case RotorDirection.Forward:
-        print("Rotor Mapping (Forward): ${List.from(mapping)..sort()}");
-        print("Rotor Inverse (Forward): $inverse");
         output = mapping[input];
-        print("Rotor (Forward): $output");
         break;
 
       case RotorDirection.Backward:
         output = inverse[input];
-        print("Rotor Mapping (Backward): ${List.from(mapping)..sort()}");
-        print("Rotor Inverse (Backward): $inverse");
-        print("Rotor (Backward): $output");
         break;
     }
 
     return output;
   }
+
+  void reset() => this.position = this.startPosition;
 }
