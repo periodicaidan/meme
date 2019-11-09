@@ -46,6 +46,10 @@ class _EnigmaButtonState extends State<EnigmaButton> {
           setState(() => _buttonState = EnigmaButtonState.Pressed);
           _provider.activate(widget.char);
         },
+        onTapCancel: () {
+          setState(() => _buttonState = EnigmaButtonState.Raised);
+          _provider.deactivate();
+        },
         onTapUp: (details) {
           setState(() => _buttonState = EnigmaButtonState.Raised);
           _provider.deactivate();
