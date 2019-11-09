@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
 import "package:enigma/utils/EnigmaButtonScheduler.dart";
-//import "package:enigma/utils/RotorResetScheduler.dart";
+import "../utils/ResetButtonScheduler.dart";
 
 class RotorPainter extends CustomPainter {
   @override
@@ -41,9 +41,11 @@ class EnigmaRotor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<EnigmaButtonScheduler>(context);
-    var startIndex = _provider.enigma.rotorSet.rotors[index].position;
-    var faceText = _provider.enigma.charset[startIndex];
+    final _enigmaProvider = Provider.of<EnigmaButtonScheduler>(context);
+    final _resetProvider = Provider.of<ResetButtonScheduler>(context);
+
+    var startIndex = _enigmaProvider.enigma.rotorSet.rotors[index].position;
+    var faceText = _enigmaProvider.enigma.charset[startIndex];
 
     return Container(
       width: size,

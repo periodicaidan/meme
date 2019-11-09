@@ -8,7 +8,7 @@ class Enigma {
   final PlugBoard plugBoard;
   final RotorSet rotorSet;
   final List<String> charset;
-  static const String LatinAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  static const String latinAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   int get numRotors => rotorSet.rotors.length;
 
   Enigma(Iterable<String> chars, this.plugBoard, this.rotorSet) :
@@ -30,10 +30,20 @@ class Enigma {
 
   Enigma.builder(this.charset) :
     plugBoard = PlugBoard(),
-    rotorSet = RotorSet(LatinAlphabet.length, [], Reflector());
+    rotorSet = RotorSet(latinAlphabet.length, [], Reflector());
 
   void addRotor(Rotor rotor, [int idx]) => rotorSet.add(rotor, idx);
   void addRotors(Iterable<Rotor> rotors) => rotorSet.addAll(rotors);
+
+  Enigma withRotor(Rotor rotor, [int idx]) {
+    addRotor(rotor, idx);
+    return this;
+  }
+
+  Enigma withRotors(Iterable<Rotor> rotors) {
+    addRotors(rotors);
+    return this;
+  }
 
   void configure() {
     // todo
@@ -56,10 +66,26 @@ class Enigma {
     "reflector": rotorSet.reflector.toString(),
     "plugBoard": plugBoard.toString()
   };
+
+  List<int> trace(String input) {
+    dynamic output = charset.indexOf(input);
+    var path = [output];
+
+    output = plugBoard.traverse(output);
+    path.add(output);
+
+    output = rotorSet.trace(output);
+    path.addAll(output);
+
+    output = plugBoard.traverse(output[-1]);
+    path.add(output);
+
+    return path;
+  }
 }
 
 main() {
-  final enigma = Enigma.defaultConfig(Enigma.LatinAlphabet.split(""));
+  final enigma = Enigma.defaultConfig(Enigma.latinAlphabet.split(""));
   var input = 'A';
   for (var i = 0; i < 1000; i++) {
     print(input);

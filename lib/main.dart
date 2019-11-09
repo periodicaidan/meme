@@ -11,6 +11,7 @@ import "package:enigma/utils/KeyboardFormats.dart";
 import "package:enigma/utils/EnigmaButtonScheduler.dart";
 import "package:enigma/widgets/EnigmaWidgets.dart";
 import "package:enigma/ConfigPage.dart";
+import "utils/ResetButtonScheduler.dart";
 
 void main() => runApp(MEME());
 
@@ -55,8 +56,16 @@ class _HomePageState extends State<HomePage> {
       rotors.insert(0, EnigmaRotor(i));
     }
 
-    return ChangeNotifierProvider(
-      builder: (context) => EnigmaButtonScheduler(widget.enigma),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<EnigmaButtonScheduler>.value(
+          value: EnigmaButtonScheduler(widget.enigma)
+        ),
+        ChangeNotifierProvider<ResetButtonScheduler>.value(
+          value: ResetButtonScheduler(widget.enigma)
+        ),
+      ],
+//      builder: (context) => EnigmaButtonScheduler(widget.enigma),
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -120,7 +129,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-/// TODO: This *does* reset all the rotors, but does not redraw them
 class RotorResetButton extends StatelessWidget {
   final Enigma enigma;
   final List<EnigmaRotor> rotors;
@@ -132,9 +140,7 @@ class RotorResetButton extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.refresh),
       onPressed: () {
-        for (var rotor in rotors) {
-          Provider.of<EnigmaButtonScheduler>(context).enigma.rotorSet.rotors[rotor.index].reset();
-        }
+        Provider.of<ResetButtonScheduler>(context).activate();
       },
       tooltip: "Reset",
     );

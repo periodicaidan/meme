@@ -41,7 +41,7 @@ class ConfigPage extends StatelessWidget {
         )
       );
     } catch (err) {
-      return Enigma.defaultConfig(Enigma.LatinAlphabet.split(""));
+      return Enigma.defaultConfig(Enigma.latinAlphabet.split(""));
     }
   }
 

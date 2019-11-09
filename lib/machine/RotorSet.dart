@@ -1,10 +1,13 @@
 import "Rotor.dart";
 import "Reflector.dart";
 
-class RotorSet {
+class RotorSet extends Iterable<Rotor> {
   final List<Rotor> rotors;
   final Reflector reflector;
   Rotor get entryRotor => rotors.first;
+
+  @override
+  Iterator<Rotor> get iterator => rotors.iterator;
 
   RotorSet(int numChars, this.rotors, this.reflector);
 
@@ -39,5 +42,32 @@ class RotorSet {
 
     step();
     return output;
+  }
+
+  List<int> trace(int input) {
+    List<int> path = [];
+    var output = input;
+
+    for (var rotor in rotors) {
+      output = rotor.traverse(output);
+      path.add(output);
+    }
+
+    output = reflector.traverse(output);
+    path.add(output);
+
+    for (var rotor in rotors) {
+      output = rotor.traverse(output, RotorDirection.Backward);
+      path.add(output);
+    }
+
+    step();
+    return path;
+  }
+
+  void reset() {
+    for (var rotor in rotors) {
+      rotor.reset();
+    }
   }
 }
