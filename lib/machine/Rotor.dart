@@ -97,5 +97,5 @@ class Rotor {
     return output;
   }
 
-  void reset() => this.position = this.startPosition;
+  void reset() => progress(startPosition - position);
 }
